@@ -214,6 +214,9 @@ function moveEnemy() {
             } else {
                 setting.score += 150;
                 item.hidden = true;
+                
+               // bonus(document.documentElement.offsetWidth/2 - 25, 35, '+150');
+               bonus(enemyRect.left, enemyRect.top, '+150');
             }
         }
 
@@ -297,3 +300,35 @@ function getT(s) {
     return (-b + Math.sqrt(b * b - 4 * a * c)) / 2 / a;
 }
 */
+
+function bonus(x, y, val) {
+    if (!bonus.div) {
+        bonus.div = document.createElement('div');
+        let style = bonus.div.style;
+        style.position = 'absolute';
+        style.color = 'lime';
+        style.fontSize = 'xx-large';
+        style.fontWeight = 900;
+        style.zIndex = 250;
+        document.body.append(bonus.div);
+    }
+
+    let style = bonus.div.style;
+    style.left = x + 'px';
+    style.top = y + 'px';
+    bonus.div.textContent = val;
+    bonus.div.hidden = false;
+
+    bonus.div.animate([
+        {
+            opacity: 1,
+            top: y + 'px'
+        },
+        {
+            opacity: 0,
+            top: y - 40 + 'px'
+        }
+    ], 800).onfinish = () => {
+        bonus.div.hidden = true;
+    };
+}
