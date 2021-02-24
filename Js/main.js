@@ -2,10 +2,20 @@ const score = document.querySelector('.score'),
     start = document.querySelector('.start'),
     gameArea = document.querySelector('.gameArea'),
     car = document.createElement('div'),
-    fps = document.querySelector('.fps');
+    fps = document.querySelector('.fps'),
+    time = document.querySelector('.time'),
+    audio = document.querySelector('.audio');
 
 const line1 = document.querySelector('#line1');
 const line2 = document.querySelector('#line2');
+
+const audioDrift = new Audio('../music/tokyo-drift.mp3');
+audioDrift.loop = true;
+audioDrift.volume = 0.3;
+const audioBoom = new Audio('../music/boom.m4a');
+audioBoom.loop = false;
+audioBoom.volume = 0.3;
+
 
 car.classList.add('car');
 start.addEventListener('click', startGame);
@@ -36,11 +46,30 @@ function getQuantitiyElements(heightElement) {
     return document.documentElement.clientHeight / heightElement + 1;
 }
 
+let startTime;
+
+audio.onclick = function(){
+    if (audioDrift.paused) {
+        
+        audio.classList.remove('audioDisabled');
+        audioDrift.play();
+    }
+    else {
+        audio.classList.add('audioDisabled');
+        audioDrift.pause();
+    }
+    console.log(audioDrift.played);
+}
+
 function startGame() {
     start.classList.add('hide');
     gameArea.classList.add('gameAreaShow');
     score.classList.add('scoreShow');
     fps.classList.add('fpsShow');
+    time.classList.add('timeShow');
+    audio.classList.add('audioShow');
+    startTime = performance.now();
+    !audio.classList.contains('audioDisabled') && audioDrift.play();
     gameArea.innerHTML = '';
     setting.score = 0;
     setting.speed = 3;
@@ -90,6 +119,16 @@ function startGame() {
 
 function playGame() {
     if (setting.start) {
+
+        let timeFromStart = performance.now() - startTime;
+        
+        let sec = '' + Math.floor(timeFromStart / 1000) % 60;
+        sec = '0'.repeat(2 - sec.length) + sec;
+
+        let min = '' + Math.floor(timeFromStart / 1000 / 60);
+        min = '0'.repeat(2 - min.length) + min;
+
+        time.textContent = `${min}.${sec}`;
         setting.fps++;
         score.innerHTML = 'SCORE<br>' + Math.floor(setting.score);
 
@@ -167,6 +206,7 @@ function playGame() {
         //увиличение сложности
         let difficulty = setting.score / 1000;
         setting.speed = setting.startSpeed + difficulty;
+
     }
 }
 
@@ -210,6 +250,8 @@ function moveEnemy() {
                 setting.start = false;
                 console.log('ДТП');
                 start.classList.remove('hide');
+                audioDrift.pause();
+                audioBoom.play();
                 score.style.top = start.offsetHeight;
             } else {
                 setting.score += 150;
@@ -258,6 +300,7 @@ function moveEnemy() {
     });
 }
 /* искусственный интеллект
+
 function calcCoords(enemyRect, item, rightEdge) {
     car.t1 = getT(setting.y - enemyRect.bottom);
     car.t2 = getT(car.ds);
