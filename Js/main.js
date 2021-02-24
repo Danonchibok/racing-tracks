@@ -11,7 +11,7 @@ const line2 = document.querySelector('#line2');
 
 const audioDrift = new Audio('./music/tokyo-drift.mp3');
 audioDrift.loop = true;
-audioDrift.volume = 0.3;
+audioDrift.volume = 0.5;
 const audioBoom = new Audio('./music/boom.m4a');
 audioBoom.loop = false;
 audioBoom.volume = 0.3;
@@ -128,7 +128,7 @@ function playGame() {
         let min = '' + Math.floor(timeFromStart / 1000 / 60);
         min = '0'.repeat(2 - min.length) + min;
 
-        time.textContent = `${min}.${sec}`;
+        time.textContent = `Время: ${min}.${sec}`;
         setting.fps++;
         score.innerHTML = 'SCORE<br>' + Math.floor(setting.score);
 
