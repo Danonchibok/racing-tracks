@@ -9,10 +9,10 @@ const score = document.querySelector('.score'),
 const line1 = document.querySelector('#line1');
 const line2 = document.querySelector('#line2');
 
-const audioDrift = new Audio('music/tokyo-drift.mp3');
+const audioDrift = new Audio('./music/tokyo-drift.mp3');
 audioDrift.loop = true;
 audioDrift.volume = 0.3;
-const audioBoom = new Audio('music/boom.m4a');
+const audioBoom = new Audio('./music/boom.m4a');
 audioBoom.loop = false;
 audioBoom.volume = 0.3;
 
