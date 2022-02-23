@@ -38,9 +38,7 @@ const setting = {
     traffic: 3
 }
 
-let lines;
-let gameStopped = false;
-let maxLength = Math.ceil(document.documentElement.clientHeight / 100) * 100;
+
 
 function getQuantitiyElements(heightElement) {
     return document.documentElement.clientHeight / heightElement + 1;
@@ -107,20 +105,21 @@ function startGame() {
     lines = Array.from(document.querySelectorAll('.line'));
     setting.lastUpdate = performance.now();
     setting.fps = 0;
-    /*
+    
     car.enemies = gameArea.querySelectorAll('.enemy');
     car.enemyTarget = car.enemies[0];
     car.enemyInd = 0;
     car.ds = car.getBoundingClientRect().bottom - car.enemyTarget.y;
     calcCoords(car.enemyTarget.getBoundingClientRect(), car.enemyTarget, gameArea.offsetWidth - car.offsetWidth);
-    */
+    
     requestAnimationFrame(playGame);
 }
 
 function playGame() {
     if (setting.start) {
-
+        setTimeout(playGame);
         let timeFromStart = performance.now() - startTime;
+        let deltaTime = performance.now() - setting.lastUpdate;
         
         let sec = '' + Math.floor(timeFromStart / 1000) % 60;
         sec = '0'.repeat(2 - sec.length) + sec;
@@ -149,7 +148,7 @@ function playGame() {
         if (keys.ArrowDown) {
             y += setting.speed;
         }
-        /*
+        
         if (!x) {
             let d = car.needX - setting.x;
             if (d > setting.speedV) {
@@ -160,7 +159,7 @@ function playGame() {
                 x = d;
             }
         }
-        */
+        
         setting.x += x;
         setting.y += y;
 
@@ -180,14 +179,13 @@ function playGame() {
         car.style.left = setting.x + 'px';
         car.style.top = setting.y + 'px';
         
-        let deltaTime = performance.now() - setting.lastUpdate;
+        
         if (deltaTime >= 1000) {
             setting.lastUpdate += deltaTime;
             fps.textContent = 'FPS: ' + setting.fps;
             setting.fps = 0;
         }
-        if (!gameStopped) setTimeout(playGame);
-
+        /*
         //Проверка полос дороги
         let result = true;
         let delt;
@@ -202,7 +200,7 @@ function playGame() {
         if (delt != 100 && delt >= 0) {
             result = false;
         }
-
+*/
         //увиличение сложности
         let difficulty = setting.score / 1000;
         setting.speed = setting.startSpeed + difficulty;
@@ -211,13 +209,15 @@ function playGame() {
 }
 
 function stopRun(event) {
-    event.preventDefault();
     keys[event.key] = false;
 }
 
 function startRun(event) {
     keys[event.key] = true;
 }
+
+let lines;
+let maxLength = Math.ceil(document.documentElement.clientHeight / 100) * 100; 
 
 function moveRoad() {
     lines.forEach(function(line) {
@@ -229,7 +229,8 @@ function moveRoad() {
         }
     });
 }
-/*
+
+
 function getX(t, x, s, w) {
     let delt = s * t;
     if ((((delt + x) / w) ^ 0) % 2 == 0) {
@@ -238,7 +239,8 @@ function getX(t, x, s, w) {
         return w - Math.abs((delt + x) % w);
     }
 }
-*/
+
+
 function moveEnemy() {
     let enemy = document.querySelectorAll('.enemy');
     enemy.forEach(function(item) {
@@ -263,7 +265,7 @@ function moveEnemy() {
         }
 
         let rightEdge = gameArea.offsetWidth - item.offsetWidth;
-/*
+
         if (item == car.enemyTarget) {
             car.ds = carRect.bottom - item.y
             if (car.needCalc) {
@@ -275,7 +277,7 @@ function moveEnemy() {
                 car.needCalc = true;
             }
         }
-*/
+
         item.y += setting.speed / 2;
         item.style.top = item.y + 'px';
         item.x += item.gs;
@@ -299,7 +301,7 @@ function moveEnemy() {
         }
     });
 }
-/* искусственный интеллект
+// искусственный интеллект
 
 function calcCoords(enemyRect, item, rightEdge) {
     car.t1 = getT(setting.y - enemyRect.bottom);
@@ -342,7 +344,7 @@ function getT(s) {
     let c = -s;
     return (-b + Math.sqrt(b * b - 4 * a * c)) / 2 / a;
 }
-*/
+
 
 function bonus(x, y, val) {
     if (!bonus.div) {
